@@ -52,8 +52,8 @@ public class OscGlobals : MonoBehaviour
 		_self = new GameObject( typeof( OscGlobals ).Name ).AddComponent<OscGlobals>();
 	}
 
-
-	void Awake()
+    [System.Obsolete]
+    void Awake()
 	{
 		// Only allow one OscSettings in the scene.
 		OscGlobals[] settings = FindObjectsOfType<OscGlobals>();

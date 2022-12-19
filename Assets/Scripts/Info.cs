@@ -5,19 +5,17 @@ using UnityEngine.UI;
 
 public class Info : MonoBehaviour
 {
+    [Rename("Info Button")]
     public Button btnInfo;
-    // Start is called before the first frame update
+
+    [Rename("URL (https://)")]
+    public string url;
+
     void Start()
     {
         btnInfo.onClick.AddListener(delegate
         {
-            Application.OpenURL("https://smartium.github.io/NDI-Limitimer/");
+            Application.OpenURL($"https://{url}");
         });
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

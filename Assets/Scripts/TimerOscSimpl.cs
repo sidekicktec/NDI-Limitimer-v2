@@ -11,13 +11,25 @@ public class TimerOscSimpl : MonoBehaviour
 {
     public bool columnsTrigger;
     public Text txtCounter;
-    public int time;
-    public int OscInPort;
-    public int OscOutPort;
-
+    
     public GameObject inputTime;
     public Button btnConfirm;
     public Button btnStart;
+
+    [Header("OSC Setup")]
+    [Rename("Input Port")]
+    public int OscInPort;
+    [Rename("Output Port")]
+    public int OscOutPort;
+
+    [Header("Default Time")]
+    [Rename("Minutes")]
+    public int time;
+
+    [Header("Default End")]
+    [Rename("Text")]
+    public string endTxt;
+
     OscIn oscIn;
     OscOut oscOut;
     OscMessage outMessage;
@@ -49,22 +61,28 @@ public class TimerOscSimpl : MonoBehaviour
 
         //StartCoroutine(OscListener());
         //inputTime.GetComponentInChildren<Text>().text = "test";
-        time *= 60;
+        //time *= 60;
 
         btnStart.onClick.AddListener(delegate
         {
             if (isPlaying)
             {
+                Debug.Log("stopTimer()");
                 stopTimer();
             }
             else
             {
                 if (counter < 1)
                 {
+                    Debug.Log("resetTimer()");
                     stopTimer("reset");
                 }
                 else
                 {
+                    txtCounter.fontSize = 300;
+                    txtCounter.alignment = TextAnchor.UpperLeft;
+                    txtCounter.color = Color.green;
+                    Debug.Log("startTimer()");
                     startTimer(time);
                 }
             }
@@ -77,6 +95,7 @@ public class TimerOscSimpl : MonoBehaviour
             time = int.Parse(inputTime.GetComponentInChildren<Text>().text) * 60;
             //txtCounter.text = "";
             counter = time;
+            Debug.Log("updateCounterDisplay() BTN CONFIRM");
             updateCounterDisplay();
         });
 
@@ -137,8 +156,10 @@ public class TimerOscSimpl : MonoBehaviour
         btnStart.GetComponentInChildren<Text>().text = "READY";
         btnStart.GetComponentInChildren<Text>().color = Color.black;
         btnStart.image.color = Color.yellow;
-        txtCounter.text = "OVER";
 
+        txtCounter.fontSize = 100;
+        txtCounter.alignment = TextAnchor.UpperCenter;
+        txtCounter.text = endTxt;
     }
 
     IEnumerator OscListener()
@@ -173,9 +194,15 @@ public class TimerOscSimpl : MonoBehaviour
         {
             StopCoroutine(counterRoutine);
             btnStart.image.color = Color.green;
+            
+            Debug.Log("diff reset");
         }
         btnStart.GetComponentInChildren<Text>().text = "START";
         btnStart.GetComponentInChildren<Text>().color = Color.black;
+
+        txtCounter.fontSize = 300;
+        txtCounter.alignment = TextAnchor.UpperLeft;
+        txtCounter.color = Color.green;
 
         counter = time;
         inputTime.SetActive(true);
@@ -248,6 +275,7 @@ public class TimerOscSimpl : MonoBehaviour
         {
             float newTime;
             incomingMessage.TryGet(0, out newTime);
+            time = (int)newTime;
             counter = (int)newTime;
         }
     }
